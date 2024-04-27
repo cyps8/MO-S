@@ -1,0 +1,73 @@
+[gd_scene load_steps=12 format=3 uid="uid://djhqgc127ej63"]
+
+[ext_resource type="Script" path="res://Scripts/Game.gd" id="1_0mj3p"]
+[ext_resource type="Script" path="res://Scripts/Player.gd" id="1_dphnb"]
+[ext_resource type="Script" path="res://Scripts/CamArm.gd" id="2_acnik"]
+[ext_resource type="Script" path="res://Scripts/PauseMenu.gd" id="4_fvyas"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_hbrfn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ettbe"]
+albedo_color = Color(0.486275, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kh5fd"]
+material = SubResource("StandardMaterial3D_ettbe")
+flip_faces = true
+radius = 2.0
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uoqly"]
+albedo_color = Color(1, 0.356863, 1, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_5kgf2"]
+material = SubResource("StandardMaterial3D_uoqly")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ybwn0"]
+radius = 0.266
+
+[sub_resource type="Environment" id="Environment_w7frd"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[node name="Game" type="Node"]
+process_mode = 3
+script = ExtResource("1_0mj3p")
+
+[node name="EsRevinu" type="Node3D" parent="."]
+process_mode = 1
+
+[node name="Nus" type="Node3D" parent="EsRevinu"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="EsRevinu/Nus"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EsRevinu/Nus/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+shape = SubResource("WorldBoundaryShape3D_hbrfn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EsRevinu/Nus"]
+mesh = SubResource("SphereMesh_kh5fd")
+
+[node name="Player" type="CharacterBody3D" parent="EsRevinu"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.871192, 0)
+script = ExtResource("1_dphnb")
+
+[node name="Mesh" type="MeshInstance3D" parent="EsRevinu/Player"]
+mesh = SubResource("PrismMesh_5kgf2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EsRevinu/Player"]
+shape = SubResource("SphereShape3D_ybwn0")
+
+[node name="Arm" type="SpringArm3D" parent="EsRevinu/Player"]
+collision_mask = 0
+spring_length = 2.0
+script = ExtResource("2_acnik")
+
+[node name="Cam" type="Camera3D" parent="EsRevinu/Player/Arm"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="EsRevinu"]
+environment = SubResource("Environment_w7frd")
+
+[node name="PauseMenu" type="CanvasLayer" parent="."]
+process_mode = 3
+script = ExtResource("4_fvyas")
